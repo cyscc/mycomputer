@@ -1,7 +1,5 @@
 package com.cyss.mycomputer.service;
 
-import com.cyss.mycomputer.entity.Cart;
-
 /**
  * @ProjectName: mycomputer
  * @PackageName: com.cyss.mycomputer.service
@@ -10,5 +8,7 @@ import com.cyss.mycomputer.entity.Cart;
  * @Description:
  */
 public interface ICartService {
+
     void  addToCart(Integer uid, Integer pid, Integer amount, String username);
+
 }
