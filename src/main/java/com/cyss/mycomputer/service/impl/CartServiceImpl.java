@@ -4,12 +4,16 @@ import com.cyss.mycomputer.entity.Cart;
 import com.cyss.mycomputer.mapper.CartMapper;
 import com.cyss.mycomputer.mapper.ProductMapper;
 import com.cyss.mycomputer.service.ICartService;
+import com.cyss.mycomputer.service.ex.AccessDeniedException;
+import com.cyss.mycomputer.service.ex.CartNotFoundException;
 import com.cyss.mycomputer.service.ex.InsertException;
 import com.cyss.mycomputer.service.ex.UpdateException;
+import com.cyss.mycomputer.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ProjectName: mycomputer
@@ -48,5 +52,44 @@ public class CartServiceImpl implements ICartService {
                 throw new UpdateException("更新数据时产生未知的异常");
             }
         }
+    }
+
+    @Override
+    public List<CartVO> getCartVOByUid(Integer uid) {
+        return cartMapper.findByUid(uid);
+    }
+
+    @Override
+    public Integer addNum(Integer cid, Integer uid, String username) {
+        Cart cart = cartMapper.findByCid(cid);
+        if(cart == null){
+            throw new CartNotFoundException("购物车商品数据不存在");
+        }
+        if(!cart.getUid().equals(uid)){
+            throw new AccessDeniedException("购物车数据非法访问");
+        }
+        Integer num = cart.getNum() + 1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if(rows != 1){
+            throw new UpdateException("购物车商品数据更新异常");
+        }
+        return num;
+    }
+
+    @Override
+    public Integer reductionNum(Integer cid, Integer uid, String username) {
+        Cart cart = cartMapper.findByCid(cid);
+        if(cart == null){
+            throw new CartNotFoundException("购物车商品数据不存在");
+        }
+        if(!cart.getUid().equals(uid)){
+            throw new AccessDeniedException("购物车数据非法访问");
+        }
+        Integer num = cart.getNum() - 1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if(rows != 1){
+            throw new UpdateException("购物车商品数据更新异常");
+        }
+        return num;
     }
 }

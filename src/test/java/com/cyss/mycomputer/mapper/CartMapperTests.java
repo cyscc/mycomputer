@@ -2,6 +2,7 @@ package com.cyss.mycomputer.mapper;
 
 import com.cyss.mycomputer.entity.Cart;
 import com.cyss.mycomputer.entity.User;
+import com.cyss.mycomputer.vo.CartVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ProjectName: mycomputer
@@ -46,6 +48,17 @@ public class CartMapperTests {
     public void findByUidAndPid(){
         Cart cart = cartMapper.findByUidAndPid(9, 10000026);
         System.out.println(cart);
+    }
+
+    @Test
+    public void findByUid(){
+        List<CartVO> carts = cartMapper.findByUid(1);
+        carts.forEach(System.out::println);
+    }
+
+    @Test
+    public void findByCid(){
+        System.out.println(cartMapper.findByCid(1));
     }
 
 }

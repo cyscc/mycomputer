@@ -1,8 +1,10 @@
 package com.cyss.mycomputer.mapper;
 
 import com.cyss.mycomputer.entity.Cart;
+import com.cyss.mycomputer.vo.CartVO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ProjectName: mycomputer
@@ -18,4 +20,8 @@ public interface CartMapper {
     Integer updateNumByCid(Integer cid, Integer num, String modifiedUser, Date modifiedTime);
 
     Cart findByUidAndPid(Integer uid, Integer pid);
+
+    List<CartVO> findByUid(Integer uid);
+
+    Cart findByCid(Integer cid);
 }

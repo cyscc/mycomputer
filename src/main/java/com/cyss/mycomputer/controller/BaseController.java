@@ -3,6 +3,7 @@ package com.cyss.mycomputer.controller;
 import com.cyss.mycomputer.controller.exception.*;
 import com.cyss.mycomputer.service.ex.*;
 import com.cyss.mycomputer.util.JsonResult;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpSession;
@@ -41,6 +42,9 @@ public class BaseController {
         }else if (e instanceof ProductNotFoundException) {
             result.setState(4006);
             result.setMessage("商品数据不存在的异常");
+        }else if (e instanceof CartNotFoundException) {
+            result.setState(4007);
+            result.setMessage("购物车数据不存在的异常");
         }else if(e instanceof InsertException){
             result.setState(5000);
             result.setMessage("注册时产生未知异常");
