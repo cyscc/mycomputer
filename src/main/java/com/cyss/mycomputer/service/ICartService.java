@@ -20,4 +20,8 @@ public interface ICartService {
     Integer addNum(Integer cid, Integer uid, String username);
 
     Integer reductionNum(Integer cid, Integer uid, String username);
+
+    List<CartVO> getCartVOByCid(Integer[] cids, Integer uid);
+
+    Integer deleteCartVOByCid(Integer cid, Integer uid);
 }

@@ -6,7 +6,7 @@
 
     <resultMap id="CartEntityMap" type="com.cyss.mycomputer.entity.Cart">
         <!-- 主键不可省略 -->
-        <result column="cid" property="cid"/>
+        <result column="oid" property="oid"/>
         <result column="created_user" property="createdUser"/>
         <result column="created_time" property="createdTime"/>
         <result column="modified_user" property="modifiedUser"/>
@@ -46,4 +46,20 @@
         from t_cart
         where cid=#{cid}
     </select>
+
+    <select id="findCartVOByCid" resultType="com.cyss.mycomputer.vo.CartVO">
+        select cid, uid, pid, t_cart.price, t_cart.num, t_product.title, t_product.image, t_product.price as realPrice
+        from t_cart join t_product on t_cart.pid=t_product.id
+        where cid in (
+            <foreach collection="array" item="cid" separator=",">
+                #{cid}
+            </foreach>
+            )
+        order by t_cart.created_time desc
+    </select>
+
+    <delete id="deleteByCid">
+        delete from t_cart
+        where cid=#{cid}
+    </delete>
 </mapper>

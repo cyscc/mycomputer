@@ -4,15 +4,13 @@ import com.cyss.mycomputer.entity.Cart;
 import com.cyss.mycomputer.mapper.CartMapper;
 import com.cyss.mycomputer.mapper.ProductMapper;
 import com.cyss.mycomputer.service.ICartService;
-import com.cyss.mycomputer.service.ex.AccessDeniedException;
-import com.cyss.mycomputer.service.ex.CartNotFoundException;
-import com.cyss.mycomputer.service.ex.InsertException;
-import com.cyss.mycomputer.service.ex.UpdateException;
+import com.cyss.mycomputer.service.ex.*;
 import com.cyss.mycomputer.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -91,5 +89,34 @@ public class CartServiceImpl implements ICartService {
             throw new UpdateException("购物车商品数据更新异常");
         }
         return num;
+    }
+
+    @Override
+    public List<CartVO> getCartVOByCid(Integer[] cids, Integer uid) {
+        List<CartVO> cartVOByCid = cartMapper.findCartVOByCid(cids);
+        Iterator<CartVO> iterator = cartVOByCid.iterator();
+        while(iterator.hasNext()){
+            CartVO vo = iterator.next();
+            if(!vo.getUid().equals(uid)){
+                cartVOByCid.remove(vo);
+            }
+        }
+        return cartVOByCid;
+    }
+
+    @Override
+    public Integer deleteCartVOByCid(Integer cid, Integer uid) {
+        Cart cart = cartMapper.findByCid(cid);
+        if(cart == null){
+            throw new DeleteException("删除的数据不存在");
+        }
+        if(!cart.getUid().equals(uid)){
+            throw new AccessDeniedException("操作数据权限错误");
+        }
+        Integer rows = cartMapper.deleteByCid(cid);
+        if(!rows.equals(1)){
+            throw new DeleteException("删除数据发生异常");
+        }
+        return rows;
     }
 }

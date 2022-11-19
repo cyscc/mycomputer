@@ -21,7 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/orderConfirm.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+        <!--<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -249,6 +249,100 @@
 
 		</footer>
 		<!--页脚结束-->
+		<script type="text/javascript">
+			$(document).ready(function (){
+				showAddressList()
+				showCartList();
+			});
+
+			function showAddressList(){
+				$("#address-list").empty();
+				$.ajax({
+					url: "/addresses/",
+					type: "GET",
+					dataType: "JSON",
+					success: function (json){
+						let list = json.data;
+						for(let i = 0; i < list.length; i++){
+							let option = '<option value="#{aid}">#{name}&nbsp;&nbsp;&nbsp;#{tag}&nbsp;&nbsp;&nbsp;#{provinceName}#{cityName}#{areaName}#{address}&nbsp;&nbsp;&nbsp;#{phone}</option>'
+							option = option.replace(/#{aid}/g, list[i].aid);
+							option = option.replace(/#{name}/g, list[i].name);
+							option = option.replace(/#{tag}/g, list[i].tag);
+							option = option.replace(/#{provinceName}/g, list[i].provinceName);
+							option = option.replace(/#{cityName}/g, list[i].cityName);
+							option = option.replace(/#{areaName}/g, list[i].areaName);
+							option = option.replace(/#{address}/g, list[i].address);
+							option = option.replace(/#{phone}/g, list[i].phone);
+
+							$("#address-list").append(option);
+						}
+					},
+					error: function (xhr){
+						alert("用户地址列表请求产生未知的异常" + xhr.status);
+					}
+				})
+			}
+
+			function showCartList(){
+				$("#cart-list").empty();
+				$.ajax({
+					url: "/carts/list",
+					type: "GET",
+					data: location.search.substring(1),
+					dataType: "JSON",
+					success: function (json){
+						let list = json.data;
+						let allCount = 0;
+						let allPrice = 0;
+						for(let i = 0; i < list.length; i++){
+							let tr = '<tr>\n' +
+									'<td><img src="..#{image}collect.png" class="img-responsive" /></td>\n' +
+									'<td>#{title}</td>\n' +
+									'<td>¥<span>#{price}</span></td>\n' +
+									'<td>#{num}</td>\n' +
+									'<td><span>#{totalPrice}</span></td>\n' +
+									'</tr>';
+							tr = tr.replace(/#{image}/g, list[i].image);
+							tr = tr.replace(/#{title}/g, list[i].title);
+							tr = tr.replace(/#{price}/g, list[i].price);
+							tr = tr.replace(/#{num}/g, list[i].num);
+							tr = tr.replace(/#{totalPrice}/g, (list[i].num * list[i].price));
+
+							$("#cart-list").append(tr);
+
+							allCount += list[i].num;
+							allPrice += list[i].num * list[i].price;
+						}
+						$("#all-count").html(allCount);
+						$("#all-price").html(allPrice);
+					},
+					error: function (xhr){
+						alert("商品信息加载产生未知的异常" + xhr.status);
+					}
+				})
+			}
+
+			$("#btn-create-order").click(function (){
+				let aid = $("#address-list").val();
+				let cids = location.search.substring(1);
+				$.ajax({
+					url: "/orders/cre	ate",
+					type: "POST",
+					data: "aid=" + aid + "&" + cids,
+					dataType: "JSON",
+					success: function (json){
+						if(json.state === 200){
+							location.href = "payment.html";
+							alert("订单创建成功");
+							console.log(json.data);
+						}
+					},
+					error: function (xhr){
+						alert("订单数据加载时产生未知的异常" + xhr.status);
+					}
+				})
+			});
+		</script>
 	</body>
 
 </html>

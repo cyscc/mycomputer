@@ -282,7 +282,7 @@
 					type: "GET",
 					dataType: "JSON",
 					success: function (json) {
-						if(json.state == 200){
+						if(json.state === 200){
 
 							$("#address-list").empty()
 							let list = json.data;

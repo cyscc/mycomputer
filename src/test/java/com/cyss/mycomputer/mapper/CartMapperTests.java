@@ -61,4 +61,15 @@ public class CartMapperTests {
         System.out.println(cartMapper.findByCid(1));
     }
 
+    @Test
+    public void findCartVOByCid(){
+        cartMapper.findCartVOByCid(new Integer[]{1, 2, 4}).forEach(System.out::println);
+    }
+
+    @Test
+    public void deleteByCid(){
+        Integer rows = cartMapper.deleteByCid(4);
+        System.out.println(rows);
+    }
+
 }

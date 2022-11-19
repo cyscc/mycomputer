@@ -44,4 +44,10 @@ public class CartServiceTests {
     public void reductionNum(){
         System.out.println(cartService.reductionNum(1, 1, "cyss"));
     }
+
+    @Test
+    public void deleteCartVOByCid(){
+        Integer rows = cartService.deleteCartVOByCid(5, 1);
+        System.out.println(rows);
+    }
 }

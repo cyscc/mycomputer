@@ -19,4 +19,6 @@ public interface IAddressService {
     void setDefault(Integer aid, Integer uid, String modifiedUser);
 
     void delete(Integer uid, Integer aid, String username);
+
+    Address getByAid(Integer aid, Integer uid);
 }

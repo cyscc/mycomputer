@@ -3,12 +3,10 @@ package com.cyss.mycomputer.controller;
 import com.cyss.mycomputer.service.ICartService;
 import com.cyss.mycomputer.util.JsonResult;
 import com.cyss.mycomputer.vo.CartVO;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -47,5 +45,17 @@ public class CartController extends BaseController{
     public JsonResult<Integer> reductionNum(@PathVariable("cid")Integer cid, HttpSession session){
         Integer num = cartService.reductionNum(cid, getUidFromSession(session), getUsernameFromSession(session));
         return new JsonResult<>(OK, num);
+    }
+
+    @RequestMapping("list")
+    public JsonResult<List<CartVO>> getCartVOByCid(Integer[] cids, HttpSession session){
+        List<CartVO> cartVOList = cartService.getCartVOByCid(cids, getUidFromSession(session));
+        return new JsonResult<>(OK, cartVOList);
+    }
+
+    @RequestMapping("{cid}/delete_cartVO")
+    public JsonResult<Void> deleteCartVOByCid(@PathVariable("cid")Integer cid, HttpSession session){
+        cartService.deleteCartVOByCid(cid, getUidFromSession(session));
+        return new JsonResult<>(OK);
     }
 }
